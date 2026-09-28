@@ -1,188 +1,175 @@
 # PocketBudget
 
-A private expense tracker with real Google Sign-In, multiple labeled
-accounts (cash, e-wallets like GCash/Maya/GoTyme, and Philippine banks),
-income and expenses, budgets, savings goals, debts, and recurring bills.
-Built to be compiled into a real installable Android APK you can send to
-friends.
+**A private, offline-first personal finance tracker for Android, built with React Native and Expo.**
 
-**Important — how sharing this works:** each person who installs the APK
-and signs in with Google gets their **own private, local copy** of the data
-on their own phone. Signing in with Google here only proves who's using the
-app — it does **not** sync your data with your friend's. If you want shared
-or synced data across phones, that requires a backend server, which is a
-bigger separate project.
+Track income and expenses across cash, e-wallets, and bank accounts, set monthly budgets, save toward goals, keep tabs on debts, and get reminders for recurring bills. Your data stays on your phone.
 
-**Stack:** React Native · Expo · React Navigation · AsyncStorage (local storage) · `@react-native-google-signin/google-signin` (native Google auth)
+![React Native](https://img.shields.io/badge/React_Native-0.86-61DAFB?logo=react&logoColor=white)
+![Expo](https://img.shields.io/badge/Expo_SDK-57-000020?logo=expo&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)
 
 ---
 
-## Why this is different from before
+## Screenshots
 
-Google Sign-In requires native code that **doesn't run in Expo Go** — the
-app you've been testing with. From here on, you'll build a real custom APK
-using Expo's cloud build service (EAS Build) instead. This is a bigger
-one-time setup, but the result is a real, shareable, installable app — which
-is what you asked for.
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/login.png" width="220" /><br /><sub>Login</sub></td>
+    <td align="center"><img src="screenshots/home.png" width="220" /><br />
+    <td align="center"><img src="screenshots/home1.png" width="220" /><br /><sub>Dashboard</sub></td>
+    <td align="center"><img src="screenshots/accounts.png" width="220" /><br /><sub>Account cards</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/add-transaction.png" width="220" /><br />
+    <td align="center"><img src="screenshots/add-transaction1.png" width="220" /><br
+    <sub>Add transaction</sub></td>
+    <td align="center"><img src="screenshots/goals.png" width="220" /><br /><sub>Savings goals</sub></td>
+    <td align="center"><img src="screenshots/more.png" width="220" /><br /><sub>More menu</sub></td>
+  </tr>
+</table>
 
-There are three stages: **(1)** set up credentials in Google Cloud Console,
-**(2)** paste one value into the code, **(3)** run the EAS build.
-
----
-
-## Stage 1 — Google Cloud Console setup
-
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) and sign in with the Google account you want to develop with.
-2. Create a new project (top-left project dropdown → "New Project"). Name it anything, e.g. "PocketBudget".
-3. In the search bar, search for **"OAuth consent screen"** and open it.
-   - User type: **External**.
-   - Fill in the app name (PocketBudget), your email for support and developer contact.
-   - You can leave scopes/test users as default for now and publish, or add yourself as a test user — either works for personal use.
-4. In the search bar, search for **"Credentials"** and open it.
-5. Click **"+ Create Credentials" → "OAuth client ID"**.
-   - Application type: **Web application** (yes, Web — this is required even though the app is Android; the Google Sign-In library needs this "Web client ID" internally).
-   - Name it anything, e.g. "PocketBudget Web".
-   - Click Create. **Copy the Client ID** that appears (looks like `123456-abc.apps.googleusercontent.com`) — you'll need it in Stage 2.
-6. Click **"+ Create Credentials" → "OAuth client ID"** again.
-   - Application type: **Android**.
-   - Package name: `com.pocketbudget.app` (already set in this project — must match exactly).
-   - SHA-1 certificate fingerprint: you'll get this from EAS in Stage 3, **step 2** — come back to add it here once you have it. You can create this Android credential now and edit it later to add the SHA-1, or wait until you have the SHA-1 and create it then.
-
----
-
-## Stage 2 — Add your Web Client ID to the code
-
-1. Open `context/AuthContext.js` in this project.
-2. Find this line near the top:
-   ```js
-   const WEB_CLIENT_ID = "PASTE_YOUR_WEB_CLIENT_ID_HERE.apps.googleusercontent.com";
-   ```
-3. Replace the placeholder with the **Web application** Client ID you copied in Stage 1, step 5. Save the file.
-
----
-
-## Stage 3 — Build the APK with EAS
-
-You'll need Node.js installed (already done) and your Expo account (already logged in from before).
-
-1. Install the EAS CLI and log in:
-   ```powershell
-   npm install -g eas-cli
-   eas login
-   ```
-2. From inside the project folder, run:
-   ```powershell
-   eas credentials
-   ```
-   Choose **Android**, then **preview** (or production), and select "Keystore: Manage everything needed to build your project" → it will generate one automatically the first time. Once generated, this same menu shows you the **SHA-1 fingerprint** — copy it.
-3. Go back to Google Cloud Console → Credentials → your **Android** OAuth client from Stage 1, step 6 → paste the SHA-1 there → Save.
-4. Now build the APK:
-   ```powershell
-   eas build --platform android --profile preview
-   ```
-   This uploads your project and builds it on Expo's servers — takes roughly 10–20 minutes. You'll get a link when it's done (also viewable at [expo.dev](https://expo.dev) under your project's Builds tab).
-5. Open that link on your phone, or download the `.apk` file to your computer and transfer it (email, USB, Google Drive, etc.) to any Android phone.
-
-## Installing the APK on a phone
-
-Android blocks installing apps from outside the Play Store by default.
-
-1. Open the `.apk` file on the phone (from the download, file manager, or the link from step 5 above).
-2. Android will prompt "Install unknown apps" — allow it for that source (usually the Files app or your browser).
-3. Tap Install. Once done, open PocketBudget and sign in with Google.
-
-Your friend does the same with the same APK file — they'll sign in with **their own** Google account, and get their own separate, private data on their own phone.
+<p align="center">
+  <img src="screenshots/pdf-report.png" width="420" /><br />
+  <sub>Exported PDF report</sub>
+</p>
 
 ---
 
 ## Features
 
-- **Sign in two ways** — Google Sign-In, or create a local email/password account right on the device (no server, so a local account only works on that one phone — no password recovery, no cross-device login)
-- A Profile screen (under More) shows your name, email/photo (if Google), and which method you used, with a working sign-out
-- **Accounts** — cash, e-wallets (GCash, Maya, GoTyme, Coins.ph), Philippine banks (Landbank, BDO, BPI, Metrobank, UnionBank, Security Bank, PNB, Chinabank), cards, or other — each with its own balance. This labels and tracks accounts manually; it does **not** connect to or sync with your real bank/e-wallet accounts (see note below).
-- **Income & expenses** — logged separately, with a running net worth total
-- **Budgets** — monthly limit per expense category, with an over-budget warning
-- **Savings goals** — set a target, contribute toward it, track progress
-- **Debts** — money owed to you and money you owe, mark settled
-- **Recurring bills** — subscriptions and regular payments, shown as "Upcoming" on Home
-- **History** — every transaction, filterable
-- **Export** — share your transaction history as a CSV file
-- Everything (except sign-in) works fully offline
+**Accounts and balances**
+- Multiple accounts: cash, e-wallets (GCash, Maya, GoTyme, Coins.ph), Philippine banks (Landbank, BDO, BPI, Metrobank, UnionBank, Security Bank, PNB, Chinabank), cards, and savings
+- Wallet-style cards on the Accounts screen, colored and textured per institution
+- Live balances and net worth, calculated from your transactions
 
-### A note on "connecting" bank accounts
+**Money tracking**
+- Income and expense logging with separate category sets
+- Monthly budgets per category, with an over-budget warning
+- Savings goals with progress bars and contributions
+- Debt tracker for money you owe and money owed to you
+- Recurring bills and subscriptions, with a local reminder notification at 9 AM on the due date
 
-There's no real API access to Landbank, GCash, GoTyme, or any bank/e-wallet
-here — that requires a formal partnership or license (similar to how Plaid
-works with US banks), which is out of reach for a personal project. What
-this app does instead: you pick the right institution when creating an
-account (so it shows the right name, icon, and color), and enter/update the
-balance yourself. It looks and feels like your real accounts, but the
-numbers are only as accurate as what you type in.
+**Insights and export**
+- Dashboard with net worth, monthly income vs. expense, a 6-month trend chart, and spending by category
+- Filterable transaction history
+- Designed PDF report and raw CSV export, both shareable from the app
+
+**Accounts and access**
+- Sign in with Google (native) or create a local email/password account
+- Login is required every time the app is launched fresh
+- Each user's data is stored separately, so accounts on the same phone never see each other's data
+- Profile screen with sign-out
+
+---
+
+## Tech stack
+
+| Area | Tools |
+| --- | --- |
+| Framework | React Native, Expo SDK 57 |
+| Navigation | React Navigation (bottom tabs + native stack) |
+| Storage | AsyncStorage (on-device, namespaced per user) |
+| Auth | `@react-native-google-signin/google-signin`, `expo-crypto` for local passwords |
+| Reminders | `expo-notifications` (local scheduled notifications) |
+| Reports | `expo-print` (HTML to PDF), `expo-sharing` |
+| Build | EAS Build (Android APK) |
+
+---
+
+## Getting started
+
+**Prerequisites:** Node.js 20.19.4 or newer, and the Expo Go app on your phone for quick testing.
+
+```bash
+git clone https://github.com/IannQt/pocketbudget-mobile-app.git
+cd pocketbudget-mobile-app
+npm install
+npx expo install --fix
+npx expo start
+```
+
+Scan the QR code with Expo Go.
+
+> **Note:** Native Google Sign-In does not run inside Expo Go. In Expo Go, use "Create account" (email/password) to explore everything else. Google Sign-In works in the built APK.
+
+### Set up Google Sign-In
+
+1. In [Google Cloud Console](https://console.cloud.google.com), create a project and configure the OAuth consent screen.
+2. Create an OAuth client ID of type **Web application** and copy its Client ID.
+3. Paste it into `WEB_CLIENT_ID` in `context/AuthContext.js`.
+4. Create an OAuth client ID of type **Android** with package name `com.pocketbudget.app` and the SHA-1 fingerprint from `eas credentials`.
+5. Add any accounts that should be allowed to sign in as test users on the consent screen.
+
+### Build the APK
+
+```bash
+npm install -g eas-cli
+eas login
+eas build --platform android --profile preview
+```
+
+The build runs on Expo's servers and returns a download link for the `.apk`.
+
+---
 
 ## Project structure
 
 ```
-budget-tracker/
-  App.js                        Login gate + navigation (tabs + nested "More" stack)
-  eas.json                      Build configuration for the Android APK
-  context/
-    AuthContext.js               Google Sign-In state + AsyncStorage persistence
-    AppContext.js                Budget data (accounts, transactions, budgets, goals, debts, recurring)
-  screens/
-    LoginScreen.js                Google Sign-In screen
-    HomeScreen.js                 Dashboard
-    AddTransactionScreen.js       Log income/expense, optionally as recurring
-    AccountsScreen.js             Accounts list + balances
-    GoalsScreen.js                 Savings goals
-    more/
-      MoreScreen.js                Hub: Profile, History, Budgets, Debts, Recurring, Export
-      ProfileScreen.js             User info + sign out
-      HistoryScreen.js
-      BudgetsScreen.js
-      DebtsScreen.js
-      RecurringScreen.js
-  components/                    Reusable UI: pickers, progress bars, charts, modals
-  utils/                         Categories/institutions, formatting, CSV export
+App.js                      Login gate, tab and stack navigation
+app.json / eas.json         Expo config and build profiles
+assets/                     App icon, adaptive icon, splash icon
+context/
+  AuthContext.js            Google + local auth, session handling
+  AppContext.js             All budget data and actions, per-user storage
+screens/
+  LoginScreen.js  HomeScreen.js  AddTransactionScreen.js
+  AccountsScreen.js  GoalsScreen.js
+  more/                     Profile, History, Budgets, Debts, Recurring
+components/                 WalletCard, modals, pickers, charts, progress bars
+utils/                      Categories/institutions, formatting, CSV, PDF, notifications
 ```
 
-## Testing quickly with Expo Go (QR code) before building an APK
+---
 
-Building an APK takes 10-20 minutes each time, so for day-to-day checking
-of how things look, use Expo Go like before:
-```powershell
-npx expo start
-```
-Scan the QR code as usual. **One thing won't work here: the "Continue with
-Google" button.** That's expected — native Google Sign-In only works in a
-real built app, not Expo Go. Everything else, including the email/password
-"Create account" login, the PDF/CSV export, and every screen and feature,
-works normally in Expo Go. Use email/password to log in while testing this
-way, and only build the APK when you want to test Google Sign-In itself or
-you're ready to share a build.
+## Technical highlights
 
-## App icon / logo
+- **Per-user data isolation.** Storage keys include the user's ID, and the data provider remounts when the signed-in user changes, so switching accounts never leaks data.
+- **Derived state instead of stored totals.** Balances, monthly totals, and category breakdowns are calculated from the raw transaction list, so they can't drift out of sync.
+- **Defensive native module loading.** The Google Sign-In module is loaded inside a try/catch, so the app still runs in Expo Go, where that native module doesn't exist.
+- **Self-updating reminders.** Whenever the recurring bills list changes, scheduled notifications are cleared and rebuilt to match.
+- **Charts without a chart library.** The trend chart and category breakdown are built from plain `View` components.
+- **Original card artwork.** Each institution's card uses its own color and a generic decorative pattern (dots, stripes, blobs), not any brand's logo.
 
-`assets/icon.png`, `assets/adaptive-icon.png`, and `assets/splash-icon.png`
-are the app's icon (a wallet mark in the app's pine-and-gold palette),
-referenced from `app.json`. The same icon is embedded in the PDF export
-header (via `utils/logoBase64.js`) and shown on the Login screen. To change
-the logo, replace `assets/icon.png` (and regenerate the other two sized
-versions) and re-run the EAS build.
+---
 
-## Rebuilding after code changes
+## Privacy and security
 
-Every time you edit the code and want a new APK, re-run:
-```powershell
-eas build --platform android --profile preview
-```
-You do **not** need to repeat the Google Cloud Console setup unless you
-change the package name or generate a new keystore.
+Being upfront about what this app is and isn't:
 
-## What to say about this project in interviews
+- All budget data stays on the device. Nothing is uploaded anywhere.
+- The app does **not** connect to real bank or e-wallet accounts. Balances are entered and tracked manually, and institutions are used as labels.
+- Data is stored in AsyncStorage, which is not encrypted at rest.
+- Local (email/password) accounts hash passwords with SHA-256 and no salt. That's acceptable for a device-local personal app, but it is not production-grade credential storage.
+- Local accounts only work on the device where they were created, and there is no password recovery.
 
-This version adds authentication (native OAuth via Google, session
-persistence, a protected navigation gate), a real native-build pipeline
-(EAS Build producing a signed, installable APK — not just Expo Go), and a
-domain-specific account model (institution-aware labeling). Good material
-for discussing auth flows, build/release pipelines, and the difference
-between a managed Expo Go workflow and a custom native build.
+---
+
+## Roadmap
+
+- [ ] Transfers between accounts
+- [ ] Encrypted storage and salted password hashing (`expo-secure-store`)
+- [ ] Biometric app lock
+- [ ] Multi-currency support
+- [ ] Dark mode
+- [ ] Optional cloud backup and sync
+- [ ] Automated tests for the balance and budget calculations
+
+---
+
+## Disclaimer
+
+PocketBudget is an independent personal project. It is **not affiliated with, endorsed by, or connected to** GCash, Maya, GoTyme, Coins.ph, Landbank, BDO, BPI, Metrobank, UnionBank, Security Bank, PNB, Chinabank, or any other institution mentioned. Institution names are used only as account labels, and the card designs are original.
+
+---
+
+Built by [Ian](https://github.com/IannQt).
