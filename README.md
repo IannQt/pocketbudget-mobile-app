@@ -37,6 +37,19 @@ Track income and expenses across cash, e-wallets, and bank accounts, set monthly
 
 ---
 
+## Download
+
+[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?logo=android&logoColor=white&style=for-the-badge)](https://github.com/IannQt/pocketbudget-mobile-app/releases/latest)
+
+1. Open the link above on your Android phone and download the `.apk` file.
+2. Open the file. If Android asks, allow **Install unknown apps** for your browser or Files app.
+3. If Play Protect warns about an unrecognized app, tap **More details** then **Install anyway**. This is normal for apps installed outside the Play Store.
+4. Open PocketBudget and create an account.
+
+> **Sign-in note:** Google Sign-In is limited to approved test accounts while the app is in testing. Everyone else can use **Create account** with email and password.
+
+---
+
 ## Features
 
 **Accounts and balances**
