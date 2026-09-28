@@ -91,7 +91,7 @@ function Gate() {
   }
 
   return user ? (
-    <AppProvider>
+    <AppProvider key={user.id} userId={user.id}>
       <AppContent />
     </AppProvider>
   ) : (

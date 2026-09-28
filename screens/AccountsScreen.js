@@ -3,9 +3,10 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useApp } from "../context/AppContext";
-import { getAccountType, COLORS } from "../utils/constants";
+import { COLORS } from "../utils/constants";
 import { formatCurrency } from "../utils/format";
 import AddAccountModal from "../components/AddAccountModal";
+import WalletCard from "../components/WalletCard";
 
 export default function AccountsScreen() {
   const { accounts, accountBalances, netWorth, deleteAccount } = useApp();
@@ -56,32 +57,15 @@ export default function AccountsScreen() {
             </TouchableOpacity>
           </View>
         ) : (
-          accounts.map((a) => {
-            const type = getAccountType(a.type);
-            const balance = accountBalances[a.id] || 0;
-            return (
-              <TouchableOpacity
-                key={a.id}
-                style={styles.accountCard}
-                onLongPress={() => confirmDelete(a)}
-              >
-                <View style={[styles.iconWrap, { backgroundColor: a.color || type.color }]}>
-                  <Ionicons name={type.icon} size={18} color={COLORS.surface} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.accountName}>{a.name}</Text>
-                  <Text style={styles.accountType}>{type.label}</Text>
-                </View>
-                <Text style={[styles.balance, balance < 0 && styles.balanceNegative]}>
-                  {formatCurrency(balance)}
-                </Text>
-              </TouchableOpacity>
-            );
-          })
+          accounts.map((a) => (
+            <TouchableOpacity key={a.id} onLongPress={() => confirmDelete(a)} activeOpacity={0.85}>
+              <WalletCard account={a} balance={accountBalances[a.id] || 0} />
+            </TouchableOpacity>
+          ))
         )}
 
         {accounts.length > 0 && (
-          <Text style={styles.hint}>Long-press an account to remove it.</Text>
+          <Text style={styles.hint}>Long-press a card to remove it.</Text>
         )}
       </ScrollView>
 
@@ -138,25 +122,5 @@ const styles = StyleSheet.create({
   emptySubtext: { color: COLORS.inkSoft, fontSize: 12, textAlign: "center", lineHeight: 18, marginBottom: 16 },
   primaryBtn: { backgroundColor: COLORS.ink, borderRadius: 10, paddingVertical: 11, paddingHorizontal: 20 },
   primaryBtnText: { color: COLORS.surface, fontWeight: "700" },
-  accountCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: COLORS.surface,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.03,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 1,
-  },
-  iconWrap: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", marginRight: 12 },
-  accountName: { color: COLORS.ink, fontWeight: "700", fontSize: 15 },
-  accountType: { color: COLORS.inkSoft, fontSize: 12, marginTop: 2 },
-  balance: { color: COLORS.ink, fontWeight: "700", fontSize: 15 },
-  balanceNegative: { color: COLORS.rose },
   hint: { color: COLORS.inkSoft, fontSize: 12, textAlign: "center", marginTop: 8 },
 });

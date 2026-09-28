@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useApp } from "../context/AppContext";
 import { ACCOUNT_TYPES, ACCOUNT_TYPE_GROUPS, COLORS } from "../utils/constants";
@@ -11,6 +11,7 @@ export default function AddAccountModal({ onClose }) {
   const [type, setType] = useState(ACCOUNT_TYPES[0].id);
   const [startingBalance, setStartingBalance] = useState("");
   const [error, setError] = useState("");
+
 
   async function handleSave() {
     if (!name.trim()) {
@@ -30,7 +31,6 @@ export default function AddAccountModal({ onClose }) {
   return (
     <ModalShell onClose={onClose}>
       <Text style={styles.title}>New account</Text>
-      <Text style={styles.subtitle}>Create a wallet, bank, or card profile so you can track balances and activity.</Text>
 
       <Text style={styles.label}>Name</Text>
       <TextInput
@@ -43,12 +43,12 @@ export default function AddAccountModal({ onClose }) {
       />
 
       <Text style={styles.label}>Type</Text>
-      <View style={styles.typeList}>
+      <ScrollView style={styles.typeScroll} nestedScrollEnabled>
         {ACCOUNT_TYPE_GROUPS.map((group) => {
           const items = ACCOUNT_TYPES.filter((t) => t.group === group);
           if (items.length === 0) return null;
           return (
-            <View key={group} style={styles.groupBlock}>
+            <View key={group} style={{ marginBottom: 10 }}>
               <Text style={styles.groupLabel}>{group}</Text>
               <View style={styles.typeGrid}>
                 {items.map((t) => {
@@ -73,11 +73,12 @@ export default function AddAccountModal({ onClose }) {
             </View>
           );
         })}
-      </View>
+      </ScrollView>
+
 
       <Text style={styles.label}>Starting balance</Text>
       <View style={styles.amountRow}>
-        <Text style={styles.currencySign}>₱</Text>
+        <Text style={styles.currencySign}>$</Text>
         <TextInput
           value={startingBalance}
           onChangeText={setStartingBalance}
@@ -103,8 +104,7 @@ export default function AddAccountModal({ onClose }) {
 }
 
 const styles = StyleSheet.create({
-  title: { fontSize: 24, fontWeight: "700", color: COLORS.ink, marginBottom: 6 },
-  subtitle: { fontSize: 13, lineHeight: 20, color: COLORS.inkSoft, marginBottom: 18 },
+  title: { fontSize: 19, fontWeight: "700", color: COLORS.ink, marginBottom: 18 },
   label: { fontSize: 13, color: COLORS.inkSoft, marginBottom: 8 },
   input: {
     borderWidth: 1,
@@ -116,8 +116,7 @@ const styles = StyleSheet.create({
     color: COLORS.ink,
     marginBottom: 16,
   },
-  typeList: { marginBottom: 12 },
-  groupBlock: { marginBottom: 12 },
+  typeScroll: { maxHeight: 220, marginBottom: 12 },
   groupLabel: { color: COLORS.inkSoft, fontSize: 11, fontWeight: "700", textTransform: "uppercase", marginBottom: 6, letterSpacing: 0.5 },
   typeGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {

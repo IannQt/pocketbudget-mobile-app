@@ -1,16 +1,9 @@
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { currentMonthKey, monthKey, todayISO, generateId, addDays } from "../utils/format";
-import { FREQUENCIES } from "../utils/constants";
-
-const KEYS = {
-  accounts: "pocketbudget:accounts",
-  transactions: "pocketbudget:transactions",
-  budgets: "pocketbudget:budgets",
-  goals: "pocketbudget:goals",
-  debts: "pocketbudget:debts",
-  recurring: "pocketbudget:recurring",
-};
+import { FREQUENCIES, getCategoryFor } from "../utils/constants";
+import { formatCurrency } from "../utils/format";
+import { ensureNotificationPermission, cancelAllReminders, scheduleReminder } from "../utils/notifications";
 
 const DEFAULT_ACCOUNTS = [
   { id: "cash-default", name: "Cash", type: "cash", color: "#16213A", startingBalance: 0 },
@@ -18,7 +11,16 @@ const DEFAULT_ACCOUNTS = [
 
 const AppContext = createContext(null);
 
-export function AppProvider({ children }) {
+export function AppProvider({ children, userId }) {
+  const KEYS = {
+    accounts: `pocketbudget:${userId}:accounts`,
+    transactions: `pocketbudget:${userId}:transactions`,
+    budgets: `pocketbudget:${userId}:budgets`,
+    goals: `pocketbudget:${userId}:goals`,
+    debts: `pocketbudget:${userId}:debts`,
+    recurring: `pocketbudget:${userId}:recurring`,
+  };
+
   const [accounts, setAccounts] = useState(DEFAULT_ACCOUNTS);
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState({});
@@ -44,7 +46,29 @@ export function AppProvider({ children }) {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [userId]);
+
+  // Reminders: whenever the recurring bills list changes, refresh scheduled
+  // local notifications so they fire at 9am on each bill's due date. Runs
+  // after the initial load finishes so it doesn't fire on empty startup data.
+  useEffect(() => {
+    if (loading) return;
+    (async () => {
+      const granted = await ensureNotificationPermission();
+      if (!granted) return;
+
+      await cancelAllReminders();
+      for (const item of recurring) {
+        const category = getCategoryFor(item.type, item.categoryId);
+        await scheduleReminder({
+          id: item.id,
+          title: item.type === "income" ? "Expected income due" : "Bill due today",
+          body: `${item.name} · ${category.label} · ${formatCurrency(item.amount)}`,
+          date: item.nextDate,
+        });
+      }
+    })();
+  }, [recurring, loading]);
 
   const persist = useCallback((key, setter) => async (next) => {
     const value = typeof next === "function" ? next : next;
@@ -55,37 +79,38 @@ export function AppProvider({ children }) {
   const saveAccounts = useCallback(async (next) => {
     setAccounts(next);
     await AsyncStorage.setItem(KEYS.accounts, JSON.stringify(next));
-  }, []);
+  }, [KEYS.accounts]);
   const saveTransactions = useCallback(async (next) => {
     setTransactions(next);
     await AsyncStorage.setItem(KEYS.transactions, JSON.stringify(next));
-  }, []);
+  }, [KEYS.transactions]);
   const saveBudgets = useCallback(async (next) => {
     setBudgets(next);
     await AsyncStorage.setItem(KEYS.budgets, JSON.stringify(next));
-  }, []);
+  }, [KEYS.budgets]);
   const saveGoals = useCallback(async (next) => {
     setGoals(next);
     await AsyncStorage.setItem(KEYS.goals, JSON.stringify(next));
-  }, []);
+  }, [KEYS.goals]);
   const saveDebts = useCallback(async (next) => {
     setDebts(next);
     await AsyncStorage.setItem(KEYS.debts, JSON.stringify(next));
-  }, []);
+  }, [KEYS.debts]);
   const saveRecurring = useCallback(async (next) => {
     setRecurring(next);
     await AsyncStorage.setItem(KEYS.recurring, JSON.stringify(next));
-  }, []);
+  }, [KEYS.recurring]);
 
   // ---------- Accounts ----------
-  const addAccount = useCallback(
-    async ({ name, type, color, startingBalance }) => {
+    const addAccount = useCallback(
+    async ({ name, type, color, startingBalance, imageUri }) => {
       const account = {
         id: generateId(),
         name: name.trim(),
         type,
         color,
         startingBalance: Number(startingBalance) || 0,
+        imageUri: imageUri || null,
       };
       await saveAccounts([...accounts, account]);
       return account;

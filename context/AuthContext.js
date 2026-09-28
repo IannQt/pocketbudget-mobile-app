@@ -14,7 +14,7 @@ try {
   console.warn("Google Sign-In native module not available in this environment.");
 }
 
-const USER_KEY = "pocketbudget:user";
+// const USER_KEY = "pocketbudget:user";
 const LOCAL_ACCOUNTS_KEY = "pocketbudget:local_accounts";
 
 // Paste the Web client ID from Google Cloud Console here (see README).
@@ -39,6 +39,11 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+    // Deliberately does NOT restore a previous session from storage — every
+  // fresh app launch (after being fully closed, not just backgrounded)
+  // starts signed out, so returning to a finance app always asks for login
+  // again. Registered local accounts are still remembered (see
+  // LOCAL_ACCOUNTS_KEY), only "who's currently signed in" resets.
   useEffect(() => {
     try {
       GoogleSignin?.configure({
@@ -48,22 +53,11 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.warn("Google Sign-In configure failed.", err?.message);
     }
-
-    (async () => {
-      try {
-        const stored = await AsyncStorage.getItem(USER_KEY);
-        if (stored) setUser(JSON.parse(stored));
-      } catch (err) {
-        console.warn("Failed to load saved user", err);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    setLoading(false);
   }, []);
 
   const persistUser = useCallback(async (profile) => {
     setUser(profile);
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(profile));
   }, []);
 
   // ---------- Google ----------
@@ -135,7 +129,7 @@ export function AuthProvider({ children }) {
       }
     }
     setUser(null);
-    await AsyncStorage.removeItem(USER_KEY);
+    // await AsyncStorage.removeItem(USER_KEY);
   }, [user]);
 
   return (

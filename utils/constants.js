@@ -24,26 +24,26 @@ export const INCOME_CATEGORIES = [
 // the right name, icon, and brand-adjacent color so your account list reads
 // like your real wallet. Balances are still entered and tracked manually.
 export const ACCOUNT_TYPES = [
-  { id: "cash", label: "Cash", icon: "cash-outline", color: "#5B7A5E", group: "Cash" },
+  { id: "cash", label: "Cash", icon: "cash-outline", color: "#5B7A5E", group: "Cash", pattern: "none" },
 
-  { id: "gcash", label: "GCash", icon: "phone-portrait-outline", color: "#0072CE", group: "E-wallets" },
-  { id: "maya", label: "Maya", icon: "phone-portrait-outline", color: "#00C16E", group: "E-wallets" },
-  { id: "gotyme", label: "GoTyme", icon: "wallet-outline", color: "#7B3FE4", group: "E-wallets" },
-  { id: "coins_ph", label: "Coins.ph", icon: "phone-portrait-outline", color: "#3B4CCA", group: "E-wallets" },
+  { id: "gcash", label: "GCash", icon: "phone-portrait-outline", color: "#0072CE", group: "E-wallets", pattern: "dots" },
+  { id: "maya", label: "Maya", icon: "phone-portrait-outline", color: "#00C16E", group: "E-wallets", pattern: "dots" },
+  { id: "gotyme", label: "GoTyme", icon: "wallet-outline", color: "#7B3FE4", group: "E-wallets", pattern: "wave" },
+  { id: "coins_ph", label: "Coins.ph", icon: "phone-portrait-outline", color: "#3B4CCA", group: "E-wallets", pattern: "dots" },
 
-  { id: "landbank", label: "Landbank", icon: "business-outline", color: "#00563F", group: "Banks" },
-  { id: "bdo", label: "BDO", icon: "business-outline", color: "#003DA5", group: "Banks" },
-  { id: "bpi", label: "BPI", icon: "business-outline", color: "#8E1537", group: "Banks" },
-  { id: "metrobank", label: "Metrobank", icon: "business-outline", color: "#003876", group: "Banks" },
-  { id: "unionbank", label: "UnionBank", icon: "business-outline", color: "#F7941D", group: "Banks" },
-  { id: "securitybank", label: "Security Bank", icon: "business-outline", color: "#003C71", group: "Banks" },
-  { id: "pnb", label: "PNB", icon: "business-outline", color: "#00563F", group: "Banks" },
-  { id: "chinabank", label: "Chinabank", icon: "business-outline", color: "#C8102E", group: "Banks" },
-  { id: "bank_other", label: "Other bank", icon: "business-outline", color: "#3E6B8A", group: "Banks" },
+  { id: "landbank", label: "Landbank", icon: "business-outline", color: "#00563F", group: "Banks", pattern: "diagonal" },
+  { id: "bdo", label: "BDO", icon: "business-outline", color: "#003DA5", group: "Banks", pattern: "diagonal" },
+  { id: "bpi", label: "BPI", icon: "business-outline", color: "#8E1537", group: "Banks", pattern: "diagonal" },
+  { id: "metrobank", label: "Metrobank", icon: "business-outline", color: "#003876", group: "Banks", pattern: "diagonal" },
+  { id: "unionbank", label: "UnionBank", icon: "business-outline", color: "#F7941D", group: "Banks", pattern: "diagonal" },
+  { id: "securitybank", label: "Security Bank", icon: "business-outline", color: "#003C71", group: "Banks", pattern: "diagonal" },
+  { id: "pnb", label: "PNB", icon: "business-outline", color: "#00563F", group: "Banks", pattern: "diagonal" },
+  { id: "chinabank", label: "Chinabank", icon: "business-outline", color: "#C8102E", group: "Banks", pattern: "diagonal" },
+  { id: "bank_other", label: "Other bank", icon: "business-outline", color: "#3E6B8A", group: "Banks", pattern: "diagonal" },
 
-  { id: "card", label: "Credit/Debit card", icon: "card-outline", color: "#A6503A", group: "Cards" },
-  { id: "savings", label: "Savings", icon: "wallet-outline", color: "#A67C3D", group: "Other" },
-  { id: "other", label: "Other", icon: "ellipsis-horizontal-outline", color: "#6B7280", group: "Other" },
+  { id: "card", label: "Credit/Debit card", icon: "card-outline", color: "#A6503A", group: "Cards", pattern: "chevron" },
+  { id: "savings", label: "Savings", icon: "wallet-outline", color: "#A67C3D", group: "Other", pattern: "none" },
+  { id: "other", label: "Other", icon: "ellipsis-horizontal-outline", color: "#6B7280", group: "Other", pattern: "none" },
 ];
 
 export const ACCOUNT_TYPE_GROUPS = ["Cash", "E-wallets", "Banks", "Cards", "Other"];
