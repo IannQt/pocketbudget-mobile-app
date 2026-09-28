@@ -14,17 +14,19 @@ Track income and expenses across cash, e-wallets, and bank accounts, set monthly
 
 <table>
   <tr>
-    <td align="center"><img src="screenshots/login.png" width="220" /><br /><sub>Login</sub></td>
-    <td align="center"><img src="screenshots/home.png" width="220" /><br />
-    <td align="center"><img src="screenshots/home1.png" width="220" /><br /><sub>Dashboard</sub></td>
-    <td align="center"><img src="screenshots/accounts.png" width="220" /><br /><sub>Account cards</sub></td>
+    <td align="center"><img src="screenshots/login.png" width="200" /><br/><sub>Login</sub></td>
+    <td align="center"><img src="screenshots/home.png" width="200" /><br/><sub>Dashboard</sub></td>
+    <td align="center"><img src="screenshots/home1.png" width="200" /><br/><sub>Dashboard 2</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="screenshots/add-transaction.png" width="220" /><br />
-    <td align="center"><img src="screenshots/add-transaction1.png" width="220" /><br
-    <sub>Add transaction</sub></td>
-    <td align="center"><img src="screenshots/goals.png" width="220" /><br /><sub>Savings goals</sub></td>
-    <td align="center"><img src="screenshots/more.png" width="220" /><br /><sub>More menu</sub></td>
+    <td align="center"><img src="screenshots/accounts.png" width="200" /><br/><sub>Account cards</sub></td>
+    <td align="center"><img src="screenshots/add-transaction.png" width="200" /><br/><sub>Add transaction</sub></td>
+    <td align="center"><img src="screenshots/add-transaction1.png" width="200" /><br/><sub>Add transaction 2</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/goals.png" width="200" /><br /><sub>Savings goals</sub></td>
+    <td align="center"><img src="screenshots/more.png" width="200" /><br /><sub>More menu</sub></td>
+    <td></td>
   </tr>
 </table>
 
